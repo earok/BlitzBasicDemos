@@ -1,0 +1,1028 @@
+
+
+
+
+
+                                  081280e0-4
+
+
+                                   Version
+                                     1.04
+
+
+
+
+                                  Crossbones
+
+
+
+                             1996 Binary Assault
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                         Generated with Heddley v1.1
+                      Heddley v1.1 (C) Edd Dumbill 1994
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - Page 1 -
+
+
+
+1.	Protracker Library Documentation
+
+
+
+                          CIA Protracker Library
+                              Blitz Basic II
+
+                         Version 1.04  (06/05/96)
+
+                                Updated by:
+                         Crossbones/Binary Assault
+
+                             Table Of Contents
+
+                               Introduction
+                       Getting Started/Installation
+                                 Commands
+                                   Bugs
+                           Contacting the author
+                             Revision History
+                    ..And the page where I thank people
+
+ WARNING! Some of the tokens have changed. To prevent headaches, you MUST
+      save off any source that uses this library in ASCII format.
+
+2.	Introduction
+
+                               Introduction
+
+
+
+The standard soundtracker replay routines supplied with Blitz Basic 2 have
+many faults, which this library attempts to overcome.  Some of the features
+are:
+
+  - Plays all PT songs that utilise either the VBLANK timing or the
+    more recent CIA based timings
+  - Plays back correctly on 50/60Hz systems, running either PAL or NTSC
+  - Contains more specialised functions for advanced programmers
+  - Enables the programmer to syncronise graphics with their music
+
+
+Credits:
+
+Original ProTracker playroutine by Amiga Freelancers, converted and enhanced
+for Blitz by Neil O'Rourke.  Naggings from Roy, Jeff and Richard. Newer
+revisions and further enhancements by Crossbones/Binary Assault.
+
+
+UPDATE (05/04/96):
+
+ Neil sent me version 1.06 of the code he was working on! What this means is
+that the library has now progressed past the point it was ever at! Be sure to
+read through the documentation to find out what new has been added.
+
+
+ If you find that you simply can't live without a certain feature, you might
+try to contact me and coax me into providing the update you need.  I say
+*MIGHT* because there is no guarentee that I'll work on it.
+
+3.	Getting Started/Installation
+
+                             Getting Started:
+
+
+What you'll need:
+
+                                  - Page 2 -
+3.	Getting Started/Installation
+
+
+ o Blitz Basic II version 1.8 or greater.
+ o An Amiga*
+ o Any music file in protracker format.
+
+
+Machine Requirements:
+
+ o Kickstart 2.0x+
+ o At least 1 meg of chip ram.
+ o A kickin' stereo.
+
+Note: You might be able to get away with using less memory (i.e. 512k) but I
+      wouldn't recommend it, and I'm not. :)
+
+Installing the library:
+
+ First, remove any older version of this library you might have. Look for
+names such as "NeilsTrackerLib.obj" or "CiaTrackerLib.obj." Don't delete them,
+but move them out of the way for now, keeping them until you're sure you don't
+need them, or that you've found the correct library to remove.
+
+ Now copy the included library into your blitzlibs:userlibs directory. Once
+copied, you'll need to recompile your DEFLIBS file to use it. (NOTE: Users of
+version 2.1 need not do this, according to Acid.)
+
+* - I sincerely hope you have one of these. :)
+
+4.	Commands (Contents)
+
+                                 Commands
+
+                              LoadTrackerModule  
+                                StartTracker     
+                                 StopTracker     
+                                DecodeModule     
+                               GetTrackerSize    
+                             GetTrackerLocation  
+                              FreeTrackerModule  
+                               GetTrackerEvent   
+                              CheckTrackerEvent  
+                              WaitTrackerEvent   
+                               CheckTrackerID    
+                                ModuleToChip     
+                               GetModuleName$    
+                             ModulePositionJump  
+                              GetModulePosition  
+                                 PauseModule     
+                             ChangeTrackerVBLank 
+                                 PlayTracker     
+                                TrackerVolume    
+                              ChangeTrackerMask  
+                                ModulePatterns   
+                              ModuleSampleName   
+                             GetPatternPosition  
+                           SetSongPatternPosition
+                              GetTrackerVolume   
+                               GetTrackerNote    
+                              SetTrackerTempo    
+                            GetTrackerInstrument 
+                               GetSongLength     
+                              GetSongPosition    
+                             StartTrackerPatPos  
+                             GetSampleLocation   
+                              GetSampleLength    
+                               BuildNoteTable    
+                            GetTrackerNoteNumber 
+
+                                  - Page 3 -
+4.	Commands (Contents)
+
+                              TrackerPlayLoop    
+                              TrackerPlayOnce    
+                              TrackerModuleEnd   
+                            TrackerDeInitialise  
+                            TrackerReInitialise  
+
+5.	LoadTrackerModule (Command)
+
+                             LoadTrackerModule
+
+Usage:
+
+success=LoadTrackerModule(TrackerModule#,FileName$)
+
+Comments:
+
+Loads the named module into chip ram, ready for playing.  This command can
+only be called in Amiga mode.  success is a boolean return code (true).  If
+the load fails for any reason, success returns the AmigaDOS error code.
+
+Note that there is an implicit call to FreeTrackerModule for whatever module
+you are trying to load.  However, if you want to load another module, don't
+try to load it on top of the existing one that is playing. Use another
+TrackerModule# (you have from 0 to 8).  The results are unpredictable, and
+range from nothing to a system crash.  We can't call StopTracker, because this
+will stop everything.
+
+6.	StartTracker (Command)
+
+                               StartTracker
+
+Usage:
+
+success=StartTracker(TrackerModule#)
+
+Comments:
+
+Starts to play the requested module, stopping any modules already playing, or
+restarts the current module, and returns true.  Returns false if the module
+couldn't be started for some reason (like it isn't loaded).
+
+7.	StopTracker (Command)
+
+                                StopTracker
+
+Usage:
+
+StopTracker
+
+Comments:
+
+Stops the current module. Not much to it, really.
+
+8.	DecodeModule (Command)
+
+                               DecodeModule
+
+Usage:
+
+DecodeModule TrackerModule#,ModuleAddress
+
+Comments:
+
+ This sets an arbitary area of memory as a tracker module, useful if you have
+BLoaded/INCBIN'd a file and want to hear if it is a module. Caution:  a
+non-module may crash the Amiga when you try to play it.
+
+
+                                  - Page 4 -
+8.	DecodeModule (Command)
+
+NOTE: As of release 1.02a, the ModuleToChip command has been changed.
+      DecodeModule now does this for you automatically if the module that
+      is being decoded is in fast ram. The ModuleToChip command will still
+      tokenise though, to prevent problems that might occur to previous
+      users of this library.
+
+9.	GetTrackerSize (Command)
+
+                              GetTrackerSize
+
+Usage:
+
+trackerlength=GetTrackerSize(TrackerModule#)  
+
+Comments:
+
+Not really much of a useful command. Simply returns the size (in bytes) that
+the module is using in memory. There should be no need to use this
+information,  and these commands are only included because they served a
+purpose in debugging  a long time ago, and to remove them would cause problems
+with the Blitz tokens.
+
+10.	GetTrackerLocation (Command)
+
+                              GetTrackerLocation
+
+Usage:
+
+trackerlength=GetTrackerLocation(TrackerModule#)  
+
+Comments:
+
+Not really much of a useful command. Simply returns the memory location that
+the module is occupying. There should be no need to use this information,  and
+these commands are only included because they served a purpose in debugging  a
+long time ago, and to remove them would cause problems with the Blitz tokens.
+
+11.	FreeTrackerModule (Command)
+
+                             FreeTrackerModule
+
+Usage:
+
+FreeTrackerModule TrackerModule#
+
+Comments:
+
+This frees a module loaded with LoadTrackerModule.  You cannot free a module
+that has been set up with DecodeModule (see below), but there is nothing to
+stop you trying.
+
+12.	GetTrackerEvent (Command)
+
+                              GetTrackerEvent
+
+Usage:
+
+trackerevent=GetTrackerEvent
+
+Comments:
+
+This command is a customised extension to the ProTracker replay routine.  A
+"TrackerEvent" occurs when the replay routine comes across a $8xx command.
+This command is not defined in the command list, and many demos (eg Jesus on
+E's) use it to trigger effects.  This command gets the most recent
+TrackerEvent, so any program looking at this will have to compare the current
+value to the value that triggered the current effect.
+
+                                  - Page 5 -
+12.	GetTrackerEvent (Command)
+
+
+13.	CheckTrackerEvent (Command)
+
+                             CheckTrackerEvent
+
+Usage:
+
+success=CheckTrackerEvent
+
+Comments:
+
+This routine checks to see if a TrackerEvent has occured since the last time
+the routine was called, and returns True if it has.  Use GetTrackerEvent to
+determine what data the $8xx command had.
+
+14.	WaitTrackerEvent (Command)
+
+                             WaitTrackerEvent
+
+Usage:
+
+event=WaitTrackerEvent
+
+Comments:
+
+ Someone mentioned this command works.. I haven't checked it, so use at your
+own risk.
+
+ Refer to CheckTrackerEvent/GetTrackerEvent for more information about this
+command.
+
+15.	CheckTrackerID (Command)
+
+                               CheckTrackerID
+
+Usage:
+
+success=CheckTrackerID(TrackerModule#)
+
+Comments:
+
+This checks the module for the standard Pro/Noise/SoundTracker ID string
+"M.K." (or "M!K!" in the case of a 100 pattern PT module), and returns True if
+one of them is found.  This means that you can safely call StartTracker.
+
+Note that there is no 100% guarenteed way of determining what is a module and
+what isn't.  Bit Arts, for example, remove the M.K. identifier to make it
+harder to rip modules, so if you're writing a module ripping program, you have
+to take this result with a grain of salt.
+
+16.	ModuleToChip (Command)
+
+                               ModuleToChip
+
+
+
+NOTE: This command is outdated as of this release. Even though the command
+      will tokenise, the command has no function. Please see the
+      DecodeModule command for more details.
+
+      Matter of fact, attempt to use this command will throw the debugger up
+      in arms. (This is to get people to remove this command from their
+      code.)
+
+17.	GetModuleName$ (Command)
+
+                              GetModuleName$
+
+                                  - Page 6 -
+17.	GetModuleName$ (Command)
+
+
+Usage:
+
+name$=GetModuleName$(TrackerModule#)
+
+Comments:
+
+Returns the name of the module in name$. Not too useful, but I made a little
+interface for workbench using the library, and needed a command like this.
+
+18.	ModulePositionJump (Command)
+
+                            ModulePositionJump
+
+Usage:
+
+ModulePositionJump(Position#)
+
+Comments:
+
+ This command tells the play routine to jump to the pattern requested in
+Position#.
+
+NOTE: There is no error checking done at this time. It would be wise to know
+      where you're going.
+
+19.	GetModulePosition (Command)
+
+                             GetModulePosition
+
+Usage:
+
+position=GetModulePosition
+
+Comments:
+
+This returns the current pattern the replay routine is playing.
+
+20.	PauseModule (Command)
+
+                                PauseModule
+
+Usage:
+
+PauseModule
+
+Comments:
+
+Stops the current module from playing, effectively pausing it. Use the command
+again to unpause it.
+
+21.	ChangeTrackerVBlank
+
+                            ChangeTrackerVBlank
+
+Usage:
+
+ChangeTrackerVBlank
+
+Comments:
+
+This command seems pretty useless, but there sure are alot of module players
+that offer vblank timing. Call the command before playing the module, then
+call the StartTracker command, so it knows which module to use. Then simply
+call the PlayModule command on every vblank.
+
+
+
+                                  - Page 7 -
+21.	PlayModule (Command)
+
+
+22.	PlayModule (Command)
+
+                                PlayModule
+
+Usage:
+
+PlayModule
+
+Comments:
+
+ This command is to be used if you use the ChangeTrackerVBlank command.
+
+ To use this command, call ChangeTrackerVBlank first. Secondly, call the
+StartTracker command. At each vblank, you must then call PlayMoudule, which
+will keep the music playing.
+
+23.	TrackerVolume (Command)
+
+                               TrackerVolume
+
+Usage:
+
+TrackerVolume [Volume Level]
+
+Comments:
+
+ What can be said? This command changes the volume level of the module. Note:
+this effects all the channels currently masked in. (Refer to the command
+ChangeTrackerMask for more information on this).
+
+24.	ChangeTrackerMask
+
+                             ChangeTrackerMask
+
+Usage:
+
+ChangeTrackerMask [NewMask]
+
+Comments:
+
+ For all intents and purposes, you might never need this command. This command
+allows you to tell the replay routine that it is not supposed to use a certain
+channel, or certain channels. This is useful if you want, for instance, a two
+channel module playing and sounds effects at the same time. The command wants
+to know what channels the replay routine CAN use.
+
+How to figure out what channels to mask:
+
+ This is fairly simple, and there are a couple of different ways to do this.
+
+ 1. ChangeTrackerMask %0000ABCD - Where ABCD represents channels 0-3.
+
+    Channels to be used by the replay routine would be represented as
+    1's, and channels you wish to use for sound effects, etc., would be
+    represented as 0's.
+
+    Example: ChangeTrackerMask %00001001 would play channels 0 and 3, while
+    channels 1 and 2 would be free for you to use.
+
+ 2. ChangeTrackerMask [DecimalValue] - Where decimal value represents:
+
+    1 - Channel 0
+    2 - Channel 1
+    4 - Channel 2
+    8 - Channel 3
+
+
+                                  - Page 8 -
+24.	ChangeTrackerMask
+
+    Example: ChangeTrackerMask 9 would play channels 0 and 3, while channels
+    1 and 2 would be free for you to use.
+
+25.	ModulePositions
+
+                              ModulePatterns
+
+Usage:
+
+patt=ModulePatterns(Module#)
+
+Comments:
+
+ This command is kind of useless, but I wanted one so it's included. ;) All
+this command does is return the number of patterns used in the module.
+
+26.	Command - ModuleSampleName
+
+                             ModuleSampleName
+
+Usage:
+
+a$=ModuleSampleName(Module#,Sample#)
+
+Comments:
+
+ This command is kind of useless, but I wanted one so it's included. ;) All
+this command does is return the sample name. Sample names are numbered 0-30.
+
+27.	GetPatternPosition
+
+                            GetPatternPosition
+
+Usage:
+
+a.b=GetPatternPosition
+
+Comments:
+
+ This command returns the current pattern position of the currently playing
+module.
+
+ Please see the "GetSongPosition" command for more information.
+
+28.	SetSongPatternPosition
+
+                          SetSongPatternPosition                         
+
+Usage:
+
+SetSongPatternPosition pattern#,position#
+
+Comments:
+
+ SetSongPatternPosition allows the user to jump from the current location to
+any other location in the module.
+
+Example situation for use:
+
+ If you happen to be programming a shoot'em'up, a nice idea is to have a
+series of explosions occur when the players ship is destroyed. Instead of
+having to manually play these samples one by one, you could create a set of
+patterns in the music module containing the explosion(s). When the time  comes
+that you need that sequence, use this command to instantly make the tracker
+replay jump to that position in the module.
+
+
+
+                                  - Page 9 -
+28.	GetTrackerVolume
+
+
+29.	GetTrackerVolume
+
+                             GetTrackerVolume
+
+Usage:
+
+vol=GetTrackerVolume(channel#)
+
+Comments:
+
+ Returns the current volume for the channel requested.
+
+NOTE:
+
+ This does not return the master volume level. This returns the default volume
+for the current sample being played.
+
+30.	SetTrackerTempo
+
+                              SetTrackerTempo
+
+Usage:
+
+SetTrackerTempo x
+
+Comments:
+
+ SetTrackerTempo changes the current module tempo (speed.)
+
+Notes:
+
+ This command uses the same internal replay routine to change the tempo. If
+the tempo is changed in the module itself, this wiill override your setting.
+
+31.	GetTrackerInstrument
+
+                           GetTrackerInstrument
+
+Usage:
+
+instrument=GetTrackerInstrument(channel#)
+
+Comments:
+
+ Returns the instrument playing on the requested channel.
+
+32.	GetSongLength
+
+                               GetSongLength
+
+Usage:
+
+length=GetSongLength
+
+Comments:
+
+ Returns the number of patterns in the current module.
+
+33.	GetSongPosition
+
+                              GetSongPosition
+
+Usage:
+
+pos=GetSongPosition
+
+
+                                 - Page 10 -
+33.	GetSongPosition
+
+Comments:
+
+ Returns the pattern number the song is currently on. 
+
+
+ If you want an understanding about how the Song position and Pattern position
+relates, read on.
+
+ Module positioning can be broken down to Song position and Pattern position.
+The song position lets you know which current pattern is playing, while the
+pattern position lets you know exactly what line it is on in regards to the
+current pattern. Each line holds the information for all four audio channels,
+informing the routine if it needs to play a note, speed up, slow down or
+perhaps change the pitch.
+
+ GetSongPosition and GetPatternPosition would be most useful for intuition
+based module players, but there are other possibilities for their use.
+
+34.	StartTrackerPatPos
+
+                            StartTrackerPatPos
+
+Usage:
+
+success=StartTrackerPatPos(Module#,Pattern#,Pos#)
+
+Comments:
+
+ This is an alternative StartTracker command, to be used if you don't want to
+start the module at the very beginning. Using the command assumes that there
+is no module currently playing.
+
+35.	GetSampleLocation
+
+                             GetSampleLocation
+
+Usage:
+
+loc.l=GetSampleLocation(Samp#)
+
+Comments:
+
+ Returns where in memory the requested sample is located.
+
+36.	GetSampleLength
+
+                              GetSampleLength
+
+Usage:
+
+len.l=GetSampleLength(Samp#)
+
+Comments:
+
+ Returns the size (in bytes) of the sample requested.
+
+37.	BuildNoteTable
+
+                              BuildNoteTable
+
+Usage:
+
+BuildNoteTable
+
+Comments:
+
+ Builds the note table required before you use GetTrackerNoteNumber.
+
+                                 - Page 11 -
+37.	BuildNoteTable
+
+
+38.	GetTrackerNoteNumber
+
+                           GetTrackerNoteNumber
+
+Usage:
+
+note=GetTrackerNoteNumber(Chan#)
+
+Comments:
+
+ Returns the current note playing in the requested channel. 
+
+NOTE:
+
+ You MUST use the BuildNoteTable command before using this.
+
+Uses:
+
+ Mainly for equalizer bars, etc. A return of 1 would mean "C-1" and so on.
+Refer to the Protracker documentation on the note tables.
+
+39.	TrackerPlayLoop
+
+                              TrackerPlayLoop
+
+Usage:
+
+TrackerPlayLoop
+
+Comments:
+
+ To be used if you have previously used the TrackerPlayOnce command. This
+command is default mode (i.e. Doesn't stop playing when the end of the module
+is reached.)
+
+40.	PlayTrackerLoop
+
+                              TrackerPlayOnce
+
+Usage:
+
+TrackerPlayOnce
+
+Comments:
+
+ This command should be used if you only want a module to play once, then
+stop. This command automatically does the effect of StopTracker once the
+module has finished.
+
+NOTE:
+
+ There is NO sure way to detect the end of the module. This routine uses two
+different methods to "guess" if the module has finished or not.
+
+ 1) If the module has really looped (i.e. Current song position is less than
+    the previous.)
+
+ 2) Timeout method. Some authors set the speed to 0 at the end of the module,
+    which would never allow the module to complete. If the current pattern
+    position remains the same of a predetermined set of time, the routine
+    concludes the module is finished playing.
+
+41.	TrackerModuleEnd
+
+                             TrackerModuleEnd
+
+
+                                 - Page 12 -
+41.	TrackerModuleEnd
+
+Usage:
+
+success=TrackerModuleEnd
+
+Comments:
+
+ Used in conjunction with TrackerPlayOnce, this command returns TRUE if the
+current module has stopped.
+
+42.	TrackerDeInitialise
+
+                            TrackerDeInitialise
+
+Usage:
+
+TrackerDeInitialise
+
+Comments:
+
+ This command frees the CIA timers allocated when the library is initialised.
+(Normally done when your program is run/executed.)
+
+ You must reinitialise the library again to use it. (Unless you use VBlank
+mode.)
+
+43.	TrackerReInitialise
+
+                            TrackerReInitialise
+
+Usage:
+
+TrackerReInitialise
+
+Comments:
+
+ This command re-allocates the CIA timers allocated when the library is
+initialised. (Normally done when your program is run/executed.)
+
+44.	Squish squish!
+
+                                   Bugs
+                         (And How To Squash Them!)
+
+
+Things I know about
+
+ o Because of some unknown problem, the routine actually reserves 3 bytes of
+   memory (added to the actual module size.) Keep this in mind when calling
+   the function to find out the byte-size of a module.
+
+Things I don't know about
+
+ Well!?! If I don't know about them, I can't really put them here can I? ;)
+
+45.	Contacting The Author
+
+                        How to Contact the Author:
+                            (This part's easy!)
+
+                         Crossbones/Binary Assault
+                              aka Steve Flock
+
+                               Via Internet
+                            xbones@cet.cet.com
+
+                              Via Snail-Mail
+                                Steve Flock
+
+                                 - Page 13 -
+45.	Contacting The Author
+
+                            2421 west LaCrosse
+                            Spokane, Washington
+                                   99205
+
+(Note: Please be sure that if you're contacting me via snailmail that you put
+the correct postage on the letter. If I have to pay to get the mail, chances
+are you won't get a reply.)
+
+46.	History
+
+                   Revision History : CiaTrackerLibrary
+
+Pre 1.01B:
+
+ -Original version by Neil updated to use a decent method of CIA timing. No
+  longer needs the crappy "SetDMA" command. :)
+
+1.01B:
+
+ -Fixed problem with slots. (Was supposed to be able to allow 0-8, but was
+  only set only to keep track through 7.
+ -Added various commands in an attempt to get up to date with the commands
+  from Neil's last update. (Version 1.6)
+ -Added better run-time error checking (Limited edition version of 1.01B.)
+
+1.02:
+
+ -Hoo boy! Did I ever screw up 1.01B. Good thing I didn't send it too much.
+  Seems that the run-time errors section REALLY made a mess of things.
+  Deleted them and rewrote the entire error checking system. MUCH better.
+ -I am now using the TrackerTester program on all versions of the library
+  ready for release. Since I have problems with beta testers offering to
+  help, then never saying a damn thing once they get the library, I figure
+  this is the next best thing. Checks all major commands for failure.
+  (NOTE: This program is now included in releases. Use it if you have
+  problems and report the errors/bugs to me for fixing.)
+ -Fixed small problem with LoadTrackerModule command. (1.02a)
+ -DecodeModule command changed to also include function from ModuleToChip.
+  ModuleToChip still tokenises, but performs no function. (1.02a)
+ -Repaired section that grabs the cia timer. This fixed the following
+  problems:
+  - Used to lose characters over the serial port when the player was active.
+  - Failed to play if one of the two cia timers was being used. (It only
+    was able to allocate one timer successfully, and failed on the other.)
+  These two should fix any problems the player had on specific machines.
+  (1.02a)
+
+1.03:
+
+ - Routine failed completely on 68000 machines. Was accessing bytes/words
+   at odd addresses.
+ - Improved the decoding section and the init section.
+ - Improved the loader code. The routine will no longer try to use traps
+   when the debugger is disabled. Also added a file-check to the run time
+   errors section.
+ - It is now possible to find out which version of the lib you have by
+   doing a version on the lib itself. (Versions prior to 1.3 won't have
+   version information.)
+
+1.04 (Current):
+
+ - Fixed the decode routine a bit. Should copy to chipram better.
+ - Added a bunch of new commands! Check 'em all out.
+ - Changed tokens (UGH! I know this sucks!)
+ - Timers not de-allocating properly.. Now frees correctly.
+
+
+
+                                 - Page 14 -
+46.	Thanks!! :)
+
+
+47.	Thanks!! :)
+
+                         The Thankyou Page:
+
+
+Thanks to the following:
+
+Neil O'Rourke: For starting the project, and for sending me the source to
+               update the commands. :)
+
+Ted Bailey: For helping me debug this sucker. You deserve a medal for your
+            work. Thanks!
+
+Defender: For helping test, making suggestions.
+
+Richard Elmore: For helping me get strings working!
+
+Acid: For Blitz!
+
+And the "NO THANKS!" award goes to:
+
+ All the people who've had a problem with this lib and didn't bother to
+contact me. Grrr!
+
+ I know there are more, but I've forgotten your names. If you're seeing this
+and saying "Geez, and he forgot me!" then get ahold of me and let me know.

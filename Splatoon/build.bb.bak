@@ -1,0 +1,34 @@
+WBStartup
+DEFTYPE .w
+
+Statement ResizeWidth{clist.l,amount.l,xadjust.l}
+	
+	diwstrt.l = xadjust*8
+	diwstop.l = diwstrt + amount*8
+	
+	dUfstrt.l = Int(diwstrt/2)
+	dUfstop.l = Int(diwstop/2)
+	
+	DisplayAdjust clist,amount,dUfstrt,dUfstop,diwstrt,diwstop
+	
+End Statement
+
+InitBank 0,224*6720,2
+CludgeBitMap 0, 224,6720,8,Bank(0)
+
+LoadBitMap 0,"sheet1.iff",0
+SavePalette 0,"pal1.iff"
+SaveBank 0,"sheet1.bank"
+
+InitCopList 0,44,120,$10000 + $8,8,256,0
+DisplayPalette 0,0
+ResizeWidth{0,-6,0}
+
+BLITZ
+CreateDisplay 0
+
+While JoyB(0) + JoyB(1) = 0
+    VWait 4
+    DisplayBitMap 0,0,120*Frame
+    Frame = QWrap(Frame+1,0,56)
+Wend
