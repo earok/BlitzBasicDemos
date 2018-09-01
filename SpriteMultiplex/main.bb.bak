@@ -1,0 +1,113 @@
+;REQUIRES RICOPPERFX LIBRARY
+;This is on the Blitz Basic ultimate disk
+
+NEWTYPE .MegaSpriteData
+	Y.w
+	X.w
+	ID.w
+End NEWTYPE
+
+;Populate the list
+#MegaSpriteCount=40
+Dim List MegaSprites.MegaSpriteData(#MegaSpriteCount-1)
+While AddItem(MegaSprites())
+Wend
+
+Statement MegaSpriteRender{}
+
+	Shared MegaSprites()
+
+	CopperReset 0,0
+	
+	;(re) sort the list
+	Offset=0	
+	SortList MegaSprites(),0
+	ResetList MegaSprites()
+	while NextItem(MegaSprites())
+		
+		*s.sprite = Addr Sprite(MegaSprites()\ID)
+	
+		;Default Positions
+		XPos = MegaSprites()\X + 64
+		YPos = MegaSprites()\Y + 44
+	
+		pos.w = ((YPos & $ff) lsl 8) | (XPos & $ff)
+		ctrl.w = (((YPos + *s\_height - 1) & $ff) lsl 8) | $80
+		d1.l = *s\_data
+		d2.l = d1 + *s\_nextoff
+					
+		;CopperWait $0,YPos-1
+
+		CopperWait 0,YPos-1
+		CopperMove $140 + Offset*8,pos
+		CopperMove $142 + Offset*8,ctrl
+		CopperMove $120 + Offset*4,d1.l LSR 16
+		CopperMove $122 + Offset*4,d1.l & $ffff
+	
+		CopperMove $148 + Offset*8,pos
+		CopperMove $14A + Offset*8,ctrl
+		CopperMove $124 + Offset*4,d2.l LSR 16
+		CopperMove $126 + Offset*4,d2.l & $ffff		
+	
+		Offset+2			
+		;Loop around. This is where we can have problem if we have more than 4 16 col sprites on one scanline!
+		if Offset>=8 Offset-8
+		
+		;Disable this sprite. Re-Enable each time we want to use a sprite
+		MegaSprites()\Enabled=false
+		
+		
+	Wend
+
+End Statement
+
+WBStartup
+DEFTYPE .w
+
+#BaseBitMap=0
+#BackgroundBitMap=1
+
+BitMap 0,320,256,4
+
+InitPalette 0,32
+LoadBitMap 0,"playercars.iff",0
+LoadPalette 0, "playercars.iff", 16
+
+Use BitMap 0
+GetaShape 0,16,0,16,16
+GetaSprite 0,0
+PalRGB 0,0,0,0,0
+Cls 1
+
+InitCopList 0,44,256,$4,8,32,(#MegaSpriteCount*9)+2
+DisplayPalette 0,0
+DisplayBitMap 0,0
+
+BLITZ
+CreateDisplay 0
+VWait
+
+;Initial offsets
+X=0
+Y=0
+ResetList MegaSprites()
+While NextItem(MegaSprites())
+	MegaSprites()\X=X
+	MegaSprites()\Y=Y
+	MegaSprites()\ID=0
+	
+	X + 20
+	if X = 80
+		X = 0
+	endif
+	
+	Y + 5
+Wend
+
+While JoyB(0)=0
+	MegaSpriteRender{}
+    VWait	
+Wend
+
+End
+
