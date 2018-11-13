@@ -24,3 +24,6 @@ An extremely rudimentary demo of how Interleaved mode can be achieved in Blitz w
 Interleaved graphics have an advantage over the standard Amiga graphics setup in that a single blit can be used to put a shape on a bitmap, regardless of the number of blitplanes. But there's also a disadvantage in that much more memory is required for cookies. In short - if you can spare the chip memory, this should give you a speed boost.
 
 Codetapper's site gives a good explanation of different Amiga graphics modes: http://codetapper.com/amiga/maptapper/documentation/gfx/gfx-mode/
+
+# Interlaced demo
+An example of how to display an AGA (8 bitplane) 640x512 image using both high res and interlace.
