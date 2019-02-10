@@ -42,11 +42,11 @@ if InitCD32
 			Format ""
 			
 			;Calculate the time of this track
-			StartTime = *TocPointer\Tracks[i-1]\Position\Minute*60 + *TocPointer\Tracks[i-1]\Position\Minute
+			StartTime = *TocPointer\Tracks[i-1]\Position\Minute*60 + *TocPointer\Tracks[i-1]\Position\Second
 			if i = *TocPointer\Summary\LastTrack
 				EndTime = *TocPointer\Summary\LeadOut\Minute*60 + *TocPointer\Summary\LeadOut\Second				
 			else
-				EndTime = *TocPointer\Tracks[i]\Position\Minute*60 + *TocPointer\Tracks[i]\Position\Minute
+				EndTime = *TocPointer\Tracks[i]\Position\Minute*60 + *TocPointer\Tracks[i]\Position\Second
 			endif
 			
 			TotalTime = EndTime - StartTime

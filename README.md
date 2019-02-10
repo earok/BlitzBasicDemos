@@ -29,4 +29,4 @@ Codetapper's site gives a good explanation of different Amiga graphics modes: ht
 An example of how to display an AGA (8 bitplane) 640x512 image using both high res and interlace.
 
 # CD32 Table of contents
-An example of how to read the table of contents from a CD. Note that the calculated track lengths are not reliable, they seem to be anything from 5-30 seconds longer than the real track lengths are, perhaps due to gaps put between tracks on the disc.
+An example of how to read the table of contents from a CD. Note that the calculated track lengths are not reliable, they seem on average 10 seconds longer than the real track lengths are, perhaps due to gaps put between tracks on the disc.
