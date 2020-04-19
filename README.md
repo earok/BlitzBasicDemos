@@ -3,6 +3,14 @@ Amiga Blitz Basic demos
 
 Random bits and pieces, including:
 
+# Transluency demo
+NEW! An adaptation of the AMOS demo by Mike at Bit Beam Cannon. Demonstrates a transluent glass effect by blitting to four or five of six bitplanes, as well as the clever EHB palette layout involved.
+
+The original AMOS demo, as well as a video demonstrating the effect, can be found at https://bitbeamcannon.com/amiga/ under "Amiga OCS/ECS Graphical Specs"
+
+Note that the instructions on the IFF haven't been updated and still refer to AMOS commands.
+
+
 # 1942 tutorial
 The downloads for the 1942 tutorials that were hosted by Amiten.TV
 
@@ -27,3 +35,6 @@ Codetapper's site gives a good explanation of different Amiga graphics modes: ht
 
 # Interlaced demo
 An example of how to display an AGA (8 bitplane) 640x512 image using both high res and interlace.
+
+# CD32 Table of contents
+An example of how to read the table of contents from a CD. Note that the calculated track lengths are not reliable, they seem on average 10 seconds longer than the real track lengths are, perhaps due to gaps put between tracks on the disc.
