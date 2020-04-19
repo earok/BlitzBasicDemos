@@ -6,7 +6,7 @@ Random bits and pieces, including:
 # Transluency demo
 NEW! An adaptation of the AMOS demo by Mike at Bit Beam Cannon. Demonstrates a transluent glass effect by blitting to four or five of six bitplanes, as well as the clever EHB palette layout involved.
 
-![Translucency](https://i.imgur.com/mPcONzy.gif)
+![Translucency](translucency.gif?raw=true)
 
 The original AMOS demo, as well as a video demonstrating the effect, can be found at https://bitbeamcannon.com/amiga/ under "Amiga OCS/ECS Graphical Specs"
 
