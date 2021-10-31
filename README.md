@@ -13,6 +13,13 @@ The original AMOS demo, as well as a video demonstrating the effect, can be foun
 Note that the instructions on the IFF haven't been updated and still refer to AMOS commands.
 
 
+# Map Generator
+Generates a random IFF map image from a tileset and some rules
+
+Note that this is extremely slow - running it on a fast Amiga or WinUAE with JIT is recommended
+
+![MapGenerator](mapgenerator/example.png?raw=true)
+
 # 1942 tutorial
 The downloads for the 1942 tutorials that were hosted by Amiten.TV
 
@@ -40,8 +47,3 @@ An example of how to display an AGA (8 bitplane) 640x512 image using both high r
 
 # CD32 Table of contents
 An example of how to read the table of contents from a CD. Note that the calculated track lengths are not reliable, they seem on average 10 seconds longer than the real track lengths are, perhaps due to gaps put between tracks on the disc.
-
-# Map Generator
-Generates a random IFF map image from a tileset and some rules
-
-Note that this is extremely slow - running it on a fast Amiga or WinUAE with JIT is recommended
