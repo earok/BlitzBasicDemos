@@ -40,3 +40,8 @@ An example of how to display an AGA (8 bitplane) 640x512 image using both high r
 
 # CD32 Table of contents
 An example of how to read the table of contents from a CD. Note that the calculated track lengths are not reliable, they seem on average 10 seconds longer than the real track lengths are, perhaps due to gaps put between tracks on the disc.
+
+# Map Generator
+Generates a random IFF map image from a tileset and some rules
+
+Note that this is extremely slow - running it on a fast Amiga or WinUAE with JIT is recommended
